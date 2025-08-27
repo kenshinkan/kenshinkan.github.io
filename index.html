@@ -324,6 +324,9 @@
                             <div class="lang-item">JPN</div> 
                             -->
                         </div>
+                        <div style="font-size: 16px; text-align: center;">
+                            v <span id="visitor-count"></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -349,6 +352,9 @@
                         <div class="lang-item">JPN</div> 
                         -->
                     </div>
+                    <div style="font-size: 16px; text-align: center;">
+                        v <span id="visitor-count"></span>
+                    </div>
                 </div>
 
                 <div class="footer-bottom">
@@ -372,6 +378,60 @@
             </div>
         </div>
     </div>
+    <script type="module">
+                // Import all Firebase SDKs you need at the top of the script
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-analytics.js";
+        import { getDatabase, ref, runTransaction, onValue } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyAscpTLdtaP-i5g94Ik-Ih4hNamjx_sVyA",
+            authDomain: "kenshinkan-counter.firebaseapp.com",
+            databaseURL: "https://kenshinkan-counter-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "kenshinkan-counter",
+            storageBucket: "kenshinkan-counter.firebasestorage.app",
+            messagingSenderId: "610293645569",
+            appId: "1:610293645569:web:8e073d265cb11015b91b00",
+            measurementId: "G-Y1HDBEMZBN"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+
+        // Get Realtime Database service
+        const db = getDatabase(app);
+        const countRef = ref(db, 'visitor_count');
+
+        // Increment visitor count when the page loads
+        runTransaction(countRef, (currentCount) => {
+            if (currentCount === null) {
+                return 1;
+            } else {
+                return currentCount + 1;
+            }
+        }).then(() => {
+            console.log("visit ok");
+        }).catch((error) => {
+            console.error("visit error:", error);
+        });
+
+        // Use onValue to get real-time updates and display the count
+        onValue(countRef, (snapshot) => {
+            const count = snapshot.val();
+            const visitorCountElement = document.getElementById('visitor-count');
+            if (visitorCountElement) {
+                visitorCountElement.textContent = count;
+            }
+        }, {
+            // Optional: Handle errors from the real-time listener
+            cancelCallback: (error) => {
+                console.error("update fail:", error);
+            }
+        });
+    </script>
 </body>
 
 <script>
