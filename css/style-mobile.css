@@ -238,7 +238,7 @@
     align-items: center;
     padding: 0;
     background-image: url('../img/bg_img_mobile.svg');
-    background-size: cover;
+    background-size: 100% auto;
     background-repeat: repeat;
     border-top: 2px solid #b28a36;
     padding: 59px 0px 59px 0px;
